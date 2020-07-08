@@ -218,6 +218,8 @@ __attribute__((annotate("returns_localized_nsstring"))) static inline NSString *
         return WMFUserActivityTypeContent;
     } else if ([self.activityType isEqualToString:CSQueryContinuationActionType]) {
         return WMFUserActivityTypeSearchResults;
+    } else if ([self wmf_location]) {
+        return WMFUserActivityTypePlaces;
     } else {
         return WMFUserActivityTypeLink;
     }
@@ -250,6 +252,19 @@ __attribute__((annotate("returns_localized_nsstring"))) static inline NSString *
     } else {
         return self.webpageURL;
     }
+}
+
+- (CLLocation *)wmf_location {
+    NSURL* url = [self wmf_linkURL];
+    
+    NSString* latitude = [url wmf_valueForQueryKey:@"latitude"];
+    NSString* longitude = [url wmf_valueForQueryKey:@"longitude"];
+    
+    if (latitude && longitude) {
+        return [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
+    }
+    
+    return NULL;
 }
 
 - (NSURL *)wmf_contentURL {

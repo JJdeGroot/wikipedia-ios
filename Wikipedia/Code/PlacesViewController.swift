@@ -2142,6 +2142,11 @@ class PlacesViewController: ViewController, UISearchBarDelegate, ArticlePopoverV
         }
     }
     
+    @objc public func showLocation(_ location: CLLocation) {
+        panMapToNextLocationUpdate = false
+        zoomAndPanMapView(toLocation: location)
+    }
+    
     var panMapToNextLocationUpdate = true
     
     func locationManager(_ controller: WMFLocationManager, didUpdate location: CLLocation) {
